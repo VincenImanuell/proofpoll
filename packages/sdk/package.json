@@ -1,0 +1,24 @@
+{
+  "name": "@proofpoll/sdk",
+  "version": "0.0.0",
+  "description": "Embeddable React widgets to collect verified-human survey responses with instant cUSD rewards (ProofPoll).",
+  "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "celo",
+    "self-protocol",
+    "minipay",
+    "survey",
+    "proof-of-personhood",
+    "cusd"
+  ],
+  "scripts": {
+    "build": "echo \"@proofpoll/sdk — implementation lands in Week 2\""
+  }
+}
