@@ -1,0 +1,18 @@
+{
+  "name": "proofpoll",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Stripe-for-verified-human-surveys on Celo/MiniPay — escrowed cUSD rewards for unique, Self-verified humans.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "forge build --root contracts",
+    "test": "forge test --root contracts",
+    "fmt": "forge fmt --root contracts",
+    "fmt:check": "forge fmt --check --root contracts",
+    "lint:contracts": "forge lint --root contracts"
+  }
+}
