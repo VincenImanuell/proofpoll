@@ -26,6 +26,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     chain + `KNOWN_ADDRESSES`, and generated `rewardEscrowAbi`/`selfHumanVerifierAbi`.
   - 18 vitest tests; ESM+CJS+d.ts build via tsup; ABIs generated from Foundry artifacts.
 - CI `sdk` job: typecheck + test + build the SDK on every push/PR.
+- **`@proofpoll/react` — React hooks + widgets** (viem-only, no wagmi) over `@proofpoll/sdk`:
+  - `ProofPollProvider` (MiniPay detection + auto-connect, `payToken` resolution, `sendLegacy`),
+    `SurveyWidget` (verify → answer → instant payout), `CreateSurveyForm`, `VerifiedHumanGate`
+    (pluggable Self stub), and `ConnectButton`/`QuestionInput`/`TxStatus`/`TxLink`.
+  - Hooks: `useProofPoll`, `useWallet`, `useSurvey`, `useReward`, `useCreateSurvey`, `useCloseSurvey`,
+    `useVerification`, `useCUSD`.
+  - MiniPay-safe writes (legacy tx + `feeCurrency` via the injected provider) and a hardened
+    receipt path that branches on `receipt.status === "reverted"` (viem resolves reverts).
+  - 9 tests (jsdom); ESM+CJS+d.ts build. CI `packages` job now builds + tests SDK then React.
 - Repo hygiene: `CONTRIBUTING.md`, `SECURITY.md`, `docs/ARCHITECTURE.md`, GitHub issue/PR templates,
   `CODEOWNERS`, and Dependabot (npm + github-actions + git submodules).
 

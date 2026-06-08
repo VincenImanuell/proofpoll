@@ -17,6 +17,10 @@
     "sdk:build": "pnpm --filter @proofpoll/sdk build",
     "sdk:test": "pnpm --filter @proofpoll/sdk test",
     "sdk:typecheck": "pnpm --filter @proofpoll/sdk typecheck",
+    "react:build": "pnpm --filter @proofpoll/sdk build && pnpm --filter @proofpoll/react build",
+    "react:test": "pnpm --filter @proofpoll/react test",
+    "react:typecheck": "pnpm --filter @proofpoll/react typecheck",
+    "packages:build": "pnpm --filter @proofpoll/sdk build && pnpm --filter @proofpoll/react build",
     "gen:abi": "forge build --root contracts && pnpm --filter @proofpoll/sdk gen:abi"
   }
 }
