@@ -32,8 +32,8 @@ jobs:
         env:
           FOUNDRY_PROFILE: ci
 
-  sdk:
-    name: sdk (@proofpoll/sdk)
+  packages:
+    name: packages (sdk + react)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -50,11 +50,15 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm --filter @proofpoll/sdk typecheck
+      - name: SDK — typecheck, test, build
+        run: |
+          pnpm --filter @proofpoll/sdk typecheck
+          pnpm --filter @proofpoll/sdk test
+          pnpm --filter @proofpoll/sdk build
 
-      - name: Test
-        run: pnpm --filter @proofpoll/sdk test
-
-      - name: Build
-        run: pnpm --filter @proofpoll/sdk build
+      - name: React — typecheck, test, build
+        # Depends on the SDK's dist built in the step above.
+        run: |
+          pnpm --filter @proofpoll/react typecheck
+          pnpm --filter @proofpoll/react test
+          pnpm --filter @proofpoll/react build
