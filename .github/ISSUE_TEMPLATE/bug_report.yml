@@ -1,0 +1,42 @@
+name: Bug report
+description: Something in the contracts or SDK behaves incorrectly.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - contracts (RewardEscrow / SelfHumanVerifier)
+        - "@proofpoll/sdk"
+        - apps/miniapp
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "forge 1.5.x / node 20 / chain: Celo Sepolia"
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Confirm
+      options:
+        - label: This is **not** a security vulnerability (those go through SECURITY.md, privately).
+          required: true
