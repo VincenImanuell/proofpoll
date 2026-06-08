@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input {
+    @apply w-full rounded bg-white/10 px-3 py-2 text-sm outline-none placeholder:text-white/40;
+  }
+  .btn-primary {
+    @apply rounded bg-celo-yellow px-4 py-2 font-medium text-black disabled:opacity-50;
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
