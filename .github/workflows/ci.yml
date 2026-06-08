@@ -62,3 +62,9 @@ jobs:
           pnpm --filter @proofpoll/react typecheck
           pnpm --filter @proofpoll/react test
           pnpm --filter @proofpoll/react build
+
+      - name: Mini App — typecheck + build
+        # Depends on the SDK + React dist built above.
+        run: |
+          pnpm --filter proofpoll-miniapp typecheck
+          pnpm --filter proofpoll-miniapp build

@@ -35,6 +35,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - MiniPay-safe writes (legacy tx + `feeCurrency` via the injected provider) and a hardened
     receipt path that branches on `receipt.status === "reverted"` (viem resolves reverts).
   - 9 tests (jsdom); ESM+CJS+d.ts build. CI `packages` job now builds + tests SDK then React.
+- **`apps/miniapp` — MiniPay Mini App demo** (Vite + React + Tailwind + react-router). Organizer
+  flow (schema builder → approve cUSD → create survey), respondent flow (verify → answer → instant
+  payout with a Blockscout link), a surveys dashboard with close/refund, and a per-survey responses
+  page reading `ResponseSubmitted` events (the distinct-wallet on-chain activity). CI typechecks +
+  builds it.
 - Repo hygiene: `CONTRIBUTING.md`, `SECURITY.md`, `docs/ARCHITECTURE.md`, GitHub issue/PR templates,
   `CODEOWNERS`, and Dependabot (npm + github-actions + git submodules).
 
