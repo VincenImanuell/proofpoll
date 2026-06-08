@@ -149,6 +149,12 @@ ProofPoll is **non-gambling by construction**: rewards are fixed and guaranteed 
 response, escrowed up front by the organizer — there is no pot of entrant money, no draw, and no
 chance involved.
 
+## Docs & contributing
+
+- [Architecture](./docs/ARCHITECTURE.md) — system map, data/privacy flow, trust boundaries.
+- [Contributing](./CONTRIBUTING.md) — setup, common tasks, conventions.
+- [Security policy](./SECURITY.md) — responsible disclosure.
+
 ## License
 
 [MIT](./LICENSE)

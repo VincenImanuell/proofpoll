@@ -26,6 +26,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     chain + `KNOWN_ADDRESSES`, and generated `rewardEscrowAbi`/`selfHumanVerifierAbi`.
   - 18 vitest tests; ESM+CJS+d.ts build via tsup; ABIs generated from Foundry artifacts.
 - CI `sdk` job: typecheck + test + build the SDK on every push/PR.
+- Repo hygiene: `CONTRIBUTING.md`, `SECURITY.md`, `docs/ARCHITECTURE.md`, GitHub issue/PR templates,
+  `CODEOWNERS`, and Dependabot (npm + github-actions + git submodules).
+
+### Removed
+- A stray binary (`*.jpeg`) accidentally committed to the repo root.
 
 ### Changed
 - **Testnet target moved from Alfajores to Celo Sepolia** (`11142220`) — Alfajores is deprecated and
