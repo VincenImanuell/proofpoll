@@ -55,12 +55,15 @@ Organizer                          Respondent (MiniPay)
 
 ```
 proofpoll/
-├── contracts/          Foundry — core smart contracts + tests   ✅ Week 1
+├── contracts/          Foundry — core smart contracts + tests   ✅ Week 1–2
 │   ├── src/
 │   │   ├── RewardEscrow.sol          escrow + instant guaranteed payout
+│   │   ├── SelfHumanVerifier.sol     Self Protocol adapter (proof-of-personhood)
+│   │   ├── self/                     in-tree mirror of the Self V2 integration surface
 │   │   └── interfaces/IHumanVerifier.sol   proof-of-personhood abstraction
-│   ├── test/           forge tests (incl. Sybil + fuzz)
-│   └── script/Deploy.s.sol
+│   ├── test/           forge tests (incl. Sybil + fuzz + Self integration)
+│   └── script/         Deploy.s.sol (mainnet) · DeployTestnet.s.sol (full Sepolia stack)
+├── deployments/        on-chain address registry per network
 ├── packages/sdk/       @proofpoll/sdk — embeddable React widgets   ⏳ Week 2
 └── apps/miniapp/       MiniPay Mini App demo                       ⏳ Week 3
 ```
@@ -79,9 +82,20 @@ responds is paid instantly.
 | `closeSurvey(id)` | organizer | Closes early and refunds the unspent escrow. |
 | `getSurvey(id)` / `remainingSlots(id)` | anyone | Read survey state. |
 
-**Anti-Sybil:** personhood is checked through the pluggable [`IHumanVerifier`](contracts/src/interfaces/IHumanVerifier.sol)
-(a Self Protocol adapter in production). The verifier returns a per-human **nullifier**; the escrow
-records it so the same human can't claim a survey twice even from different wallets.
+**Anti-Sybil:** personhood is checked through the pluggable [`IHumanVerifier`](contracts/src/interfaces/IHumanVerifier.sol).
+The production implementation is [`SelfHumanVerifier`](contracts/src/SelfHumanVerifier.sol) — a
+**Self Protocol** adapter: the Self Identity Verification Hub verifies a respondent's zero-knowledge
+proof-of-personhood and calls back with a per-human **nullifier**, which the adapter records and the
+escrow uses to block the same human from claiming a survey twice even across different wallets.
+
+### `SelfHumanVerifier.sol`
+
+The Self Protocol adapter. A respondent completes the Self flow once; the Hub calls
+`onVerificationSuccess`, binding their wallet to their app-scoped nullifier. `RewardEscrow` then
+reads that nullifier via a cheap `verify()` lookup on every submission. On Celo Sepolia the Hub is a
+`MockSelfHub` (Self uses mock passports on testnet); on mainnet it is Self's Identity Verification
+Hub V2. The `contracts/src/self/` mirror lets this build and deploy without the full Self dependency
+— swapping in the official `SelfVerificationRoot` base is a drop-in.
 
 ---
 
@@ -98,22 +112,28 @@ forge test -vvv  # run the suite (unit + Sybil + fuzz)
 forge fmt        # format
 ```
 
-Deploy to Celo Alfajores (testnet):
+Deploy the full stack to Celo Sepolia (testnet — chain `11142220`):
 
 ```bash
-cp .env.example .env   # fill in RPC, CELOSCAN_API_KEY, VERIFIER, PRIVATE_KEY
-forge script script/Deploy.s.sol --rpc-url alfajores --broadcast --verify
+cp .env.example .env   # fill in RPC + CELOSCAN_API_KEY
+# Deploys MockSelfHub + SelfHumanVerifier + RewardEscrow, wired together:
+forge script script/DeployTestnet.s.sol \
+  --rpc-url celo_sepolia --broadcast \
+  --keystore <keystore> --sender <deployer>
 ```
+
+Deployed addresses are recorded in [`deployments/`](./deployments). On mainnet, deploy the verifier
+against Self's real Hub V2, then `Deploy.s.sol` with `VERIFIER` set to its address.
 
 ---
 
 ## Roadmap
 
 - **Week 1 — Foundation (testnet).** ✅ Monorepo, `RewardEscrow` core, full forge test suite (Sybil +
-  fuzz), CI on Alfajores.
-- **Week 2 — SDK + Self.** `@proofpoll/sdk` React widgets (`<VerifiedHumanGate>`, `<SurveyWidget>`,
-  `useReward()`), real Self adapter (`SelfHumanVerifier`), encrypted answers → IPFS/Lighthouse,
-  on-chain consent.
+  fuzz), CI.
+- **Week 2 — SDK + Self.** ✅ `SelfHumanVerifier` Self Protocol adapter + integration tests, Celo
+  Sepolia deploy stack. ⏳ `@proofpoll/sdk` React widgets (`<VerifiedHumanGate>`, `<SurveyWidget>`,
+  `useReward()`), encrypted answers → IPFS/Lighthouse, on-chain consent.
 - **Week 3 — Mainnet + demo.** MiniPay Mini App, deploy + verify on Celo mainnet, real respondents,
   demo video + deck.
 
