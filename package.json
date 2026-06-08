@@ -13,6 +13,10 @@
     "test": "forge test --root contracts",
     "fmt": "forge fmt --root contracts",
     "fmt:check": "forge fmt --check --root contracts",
-    "lint:contracts": "forge lint --root contracts"
+    "lint:contracts": "forge lint --root contracts",
+    "sdk:build": "pnpm --filter @proofpoll/sdk build",
+    "sdk:test": "pnpm --filter @proofpoll/sdk test",
+    "sdk:typecheck": "pnpm --filter @proofpoll/sdk typecheck",
+    "gen:abi": "forge build --root contracts && pnpm --filter @proofpoll/sdk gen:abi"
   }
 }
