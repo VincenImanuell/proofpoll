@@ -1,24 +1,53 @@
 {
   "name": "@proofpoll/sdk",
-  "version": "0.0.0",
-  "description": "Embeddable React widgets to collect verified-human survey responses with instant cUSD rewards (ProofPoll).",
+  "version": "0.2.0",
+  "description": "Collect verified-human survey responses with instant cUSD rewards on Celo (ProofPoll).",
   "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "keywords": [
     "celo",
+    "celo-sepolia",
     "self-protocol",
     "minipay",
     "survey",
     "proof-of-personhood",
-    "cusd"
+    "cusd",
+    "viem"
   ],
   "scripts": {
-    "build": "echo \"@proofpoll/sdk — implementation lands in Week 2\""
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "gen:abi": "node scripts/gen-abi.mjs"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

@@ -17,6 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   caller rejection, and an end-to-end `SelfHumanVerifier` + `RewardEscrow` integration).
 - `DeployTestnet.s.sol`: one-command Celo Sepolia deploy of the full stack; `deployments/` registry.
 
+- **`@proofpoll/sdk` core (TypeScript).** Framework-agnostic SDK over `RewardEscrow`:
+  - `createProofPollClient` — typed viem reads/writes (`getSurvey`, `remainingSlots`,
+    `hasResponded`, `createSurvey`, `submitResponse`, `closeSurvey`).
+  - `prepareResponse` — the client-side pipeline: AES-256-GCM encrypt answers → optionally pin the
+    ciphertext to IPFS (Lighthouse) → compute the on-chain `responseHash` commitment.
+  - `encryptAnswer`/`decryptAnswer`, `hashSchema`/`hashResponse`, calldata encoders, `celoSepolia`
+    chain + `KNOWN_ADDRESSES`, and generated `rewardEscrowAbi`/`selfHumanVerifierAbi`.
+  - 18 vitest tests; ESM+CJS+d.ts build via tsup; ABIs generated from Foundry artifacts.
+- CI `sdk` job: typecheck + test + build the SDK on every push/PR.
+
 ### Changed
 - **Testnet target moved from Alfajores to Celo Sepolia** (`11142220`) — Alfajores is deprecated and
   Self Protocol's testnet Hub lives on Celo Sepolia. Updated RPC, cUSD address, and explorer config.

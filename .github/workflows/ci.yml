@@ -31,3 +31,30 @@ jobs:
         run: forge test -vvv
         env:
           FOUNDRY_PROFILE: ci
+
+  sdk:
+    name: sdk (@proofpoll/sdk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @proofpoll/sdk typecheck
+
+      - name: Test
+        run: pnpm --filter @proofpoll/sdk test
+
+      - name: Build
+        run: pnpm --filter @proofpoll/sdk build
