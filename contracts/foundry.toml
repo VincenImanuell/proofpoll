@@ -19,9 +19,11 @@ bracket_spacing = true
 int_types = "long"
 
 [rpc_endpoints]
-alfajores = "${CELO_ALFAJORES_RPC}"
+celo_sepolia = "${CELO_SEPOLIA_RPC}"
 celo = "${CELO_MAINNET_RPC}"
 
 [etherscan]
-alfajores = { key = "${CELOSCAN_API_KEY}", url = "https://api-alfajores.celoscan.io/api", chain = 44787 }
+# Celo Sepolia (chain 11142220). Celoscan testnet explorer; Blockscout is a keyless alternative:
+#   --verifier blockscout --verifier-url https://celo-sepolia.blockscout.com/api
+celo_sepolia = { key = "${CELOSCAN_API_KEY}", url = "https://api-sepolia.celoscan.io/api", chain = 11142220 }
 celo = { key = "${CELOSCAN_API_KEY}", url = "https://api.celoscan.io/api", chain = 42220 }
