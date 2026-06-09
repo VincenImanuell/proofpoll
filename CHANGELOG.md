@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-09
+
+First tagged milestone: contracts + SDK + React widgets + MiniPay Mini App, on Celo Sepolia.
+
+### Fixed
+- No-upload `prepareResponse` now binds the **full** `EncryptedAnswer` (ciphertext + IV), and
+  `SurveyWidget` surfaces `encrypted` in `onSuccess`, so committed answers stay recoverable.
+- `uploadToLighthouse` rejects an invalid CID; `useSurvey`/`useCUSD` reads are race-safe
+  (latest-wins); `ProofPollProvider` init retries on failure; `useVerification` requires `mockHub`;
+  `onSuccess` callbacks re-fire per transaction. (10 verified items from an adversarial review.)
+- CI `abi-sync` job fails the build if the committed SDK ABIs drift from the contracts.
+
 ### Added
 - **`SelfHumanVerifier` — Self Protocol adapter** implementing `IHumanVerifier`. Records the
   per-human Self nullifier on the Hub's verification callback, then answers `RewardEscrow`'s
