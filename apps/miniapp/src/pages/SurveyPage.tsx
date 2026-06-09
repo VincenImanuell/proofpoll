@@ -33,7 +33,9 @@ export function SurveyPage() {
 
   return (
     <div className="space-y-4">
-      <SurveyWidget surveyId={id} schema={schema} onSuccess={setDone} className="space-y-4" />
+      {/* `upload` pins the encrypted answer to IPFS when a Lighthouse key is configured, so the
+          committed answer stays recoverable; otherwise the widget surfaces `encrypted` in onSuccess. */}
+      <SurveyWidget surveyId={id} schema={schema} upload onSuccess={setDone} className="space-y-4" />
     </div>
   );
 }

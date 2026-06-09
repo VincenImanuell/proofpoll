@@ -40,7 +40,7 @@ function newSession(): string {
 /// on testnet — real Sybil resistance comes from Self on mainnet (`gateMode: "self"`), where only
 /// the verify body changes.
 export function useVerification(scope = "proofpoll"): UseVerificationResult {
-  const { account, publicClient, verifier, mockHub, gateMode, sendLegacy } = useProofPoll();
+  const { account, publicClient, verifier, mockHub, sendLegacy } = useProofPoll();
   const [status, setStatus] = useState<VerificationStatus>("idle");
   const [isHuman, setIsHuman] = useState(false);
   const [error, setError] = useState<VerificationError>();
@@ -75,8 +75,10 @@ export function useVerification(scope = "proofpoll"): UseVerificationResult {
   const verify = useCallback(async (): Promise<Hex> => {
     if (!account) throw new Error("Connect a wallet first.");
     if (await recheck()) return "0x";
-    if (gateMode === "stub" && !mockHub) {
-      throw new Error("mockHub address is required for the testnet stub gate (gateMode: 'stub').");
+    // The stub verify body registers on-chain via MockSelfHub, so mockHub is always required here.
+    // (The mainnet `gateMode: "self"` swap replaces this body with the real Self flow.)
+    if (!mockHub) {
+      throw new Error("mockHub address is required for on-chain verification registration.");
     }
     try {
       sessionRef.current = newSession();
@@ -89,7 +91,7 @@ export function useVerification(scope = "proofpoll"): UseVerificationResult {
         functionName: "pushHuman",
         args: [verifier, account, nullifier],
       });
-      const hash = await sendLegacy(mockHub as Hex, data);
+      const hash = await sendLegacy(mockHub, data);
       await waitOrThrow(publicClient, hash);
       await recheck();
       if (mounted.current) setStatus("verified");
@@ -101,7 +103,7 @@ export function useVerification(scope = "proofpoll"): UseVerificationResult {
       }
       throw e;
     }
-  }, [account, recheck, gateMode, mockHub, verifier, sendLegacy, publicClient]);
+  }, [account, recheck, mockHub, verifier, sendLegacy, publicClient]);
 
   const universalLink = `https://redirect.self.xyz/?sessionId=${sessionRef.current}&scope=${encodeURIComponent(scope)}&endpoint=${verifier}`;
 
