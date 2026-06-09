@@ -6,6 +6,7 @@
   "deployedBlock": 27680729,
   "deployer": "0xC30307620677a77FB30B52b2CC2dcB7a85d91C16",
   "toolchain": "forge",
+  "sourceVerified": true,
   "contracts": {
     "mockSelfHub": "0x492655FE8343E22fcAE9F52090257Ca17F18562A",
     "selfHumanVerifier": "0x3B3698f898385fEd25ec4974866237f32Fd4dBe0",
