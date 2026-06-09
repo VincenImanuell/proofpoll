@@ -13,7 +13,8 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-celo-dark text-white">
       <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-        <Link to="/" className="font-bold text-celo-yellow">
+        <Link to="/" className="flex items-center gap-2 font-bold text-celo-yellow">
+          <img src="/logo.jpeg" alt="" className="h-7 w-7 rounded" />
           ProofPoll
         </Link>
         <nav className="flex gap-3 text-sm">
