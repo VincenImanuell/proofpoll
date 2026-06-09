@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/proofpoll-logo.jpeg" alt="ProofPoll logo" width="160" />
+</p>
+
 # ProofPoll
 
 **Stripe-for-verified-human-surveys on Celo.** ProofPoll lets anyone run a survey where every
