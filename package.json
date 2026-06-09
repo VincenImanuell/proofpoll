@@ -1,6 +1,6 @@
 {
   "name": "proofpoll",
-  "version": "0.0.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Stripe-for-verified-human-surveys on Celo/MiniPay — escrowed cUSD rewards for unique, Self-verified humans.",
   "license": "MIT",
