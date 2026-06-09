@@ -31,11 +31,22 @@ contract SelfHumanVerifier is SelfVerificationRootStub, IHumanVerifier {
     /// @notice Emitted when a wallet is bound to a verified human.
     event HumanVerified(address indexed subject, uint256 indexed nullifier);
 
+    /// @notice Verification config the real Self Hub should enforce. Zero on testnet (the MockSelfHub
+    ///         ignores it). On mainnet this MUST be set to a config registered via the Hub's
+    ///         `setVerificationConfigV2(...)` — a zero id is not a registered config and would enforce
+    ///         no policy on the real Hub. Wiring this is tracked for the mainnet swap (issue #12).
+    bytes32 public verificationConfigId;
+
     error NotVerified();
 
     /// @param hub_      Identity Verification Hub (a `MockSelfHub` on testnet; Self's Hub V2 on mainnet).
     /// @param scopeSeed Short app scope seed, e.g. "proofpoll".
     constructor(address hub_, string memory scopeSeed) SelfVerificationRootStub(hub_, scopeSeed) { }
+
+    /// @inheritdoc SelfVerificationRootStub
+    function getConfigId(bytes32, bytes32, bytes memory) public view override returns (bytes32) {
+        return verificationConfigId;
+    }
 
     /// @inheritdoc SelfVerificationRootStub
     /// @dev Binds the verifying wallet to the disclosed nullifier. Idempotent: a human may

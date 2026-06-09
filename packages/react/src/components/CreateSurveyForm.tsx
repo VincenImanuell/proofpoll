@@ -47,10 +47,11 @@ export function CreateSurveyForm({
 
   const onSuccessRef = useRef(onSuccess);
   onSuccessRef.current = onSuccess;
-  const notified = useRef(false);
+  // Keyed on the create tx hash so a second survey re-arms the callback.
+  const lastNotified = useRef<Hex>();
   useEffect(() => {
-    if (create.status === "success" && !notified.current) {
-      notified.current = true;
+    if (create.status === "success" && create.createHash && create.createHash !== lastNotified.current) {
+      lastNotified.current = create.createHash;
       onSuccessRef.current?.({
         surveyId: create.surveyId,
         txHash: create.createHash,

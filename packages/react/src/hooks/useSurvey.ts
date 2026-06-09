@@ -31,31 +31,33 @@ export function useSurvey(surveyId?: bigint, opts: UseSurveyOptions = {}): UseSu
   const [remaining, setRemaining] = useState<bigint>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error>();
-  const cancelRef = useRef(false);
+  // Monotonic request id: only the most recent fetch may commit state (latest-wins).
+  const reqId = useRef(0);
 
   const refetch = useCallback(async () => {
     if (surveyId === undefined) return;
+    const myId = ++reqId.current;
     setLoading(true);
     setError(undefined);
     try {
       const [s, r] = await Promise.all([client.getSurvey(surveyId), client.remainingSlots(surveyId)]);
-      if (cancelRef.current) return;
+      if (myId !== reqId.current) return;
       setSurvey(s);
       setRemaining(r);
     } catch (e) {
-      if (!cancelRef.current) setError(e as Error);
+      if (myId === reqId.current) setError(e as Error);
     } finally {
-      if (!cancelRef.current) setLoading(false);
+      if (myId === reqId.current) setLoading(false);
     }
   }, [client, surveyId]);
 
   useEffect(() => {
-    cancelRef.current = false;
     void refetch();
     let timer: ReturnType<typeof setInterval> | undefined;
     if (opts.pollMs) timer = setInterval(() => void refetch(), opts.pollMs);
     return () => {
-      cancelRef.current = true;
+      // Invalidate any in-flight fetch from this run (unmount or dep change).
+      reqId.current++;
       if (timer) clearInterval(timer);
     };
   }, [refetch, opts.pollMs]);

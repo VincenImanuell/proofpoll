@@ -51,7 +51,10 @@ abstract contract SelfVerificationRootStub {
     }
 
     /// @notice Which verification config the Hub should enforce for a request.
-    /// @dev Mirrors the official `getConfigId`; ProofPoll returns a single static config.
+    /// @dev Mirrors the official `getConfigId`. The default is `bytes32(0)`, which the testnet
+    ///      MockSelfHub ignores. On the real Hub a child MUST override this to return a config id
+    ///      previously registered via `setVerificationConfigV2(...)`; a zero id is not a registered
+    ///      config and enforces no policy. `SelfHumanVerifier` overrides it for exactly this reason.
     function getConfigId(bytes32, bytes32, bytes memory) public view virtual returns (bytes32) {
         return bytes32(0);
     }

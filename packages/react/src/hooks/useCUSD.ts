@@ -19,10 +19,12 @@ export function useCUSD(): UseCUSDResult {
   const { rewardToken, publicClient, account, sendLegacy } = useProofPoll();
   const [balance, setBalance] = useState<bigint>();
   const [loading, setLoading] = useState(false);
-  const cancelRef = useRef(false);
+  // Monotonic request id: only the most recent read may commit state (latest-wins).
+  const reqId = useRef(0);
 
   const refetch = useCallback(async () => {
     if (!account) return;
+    const myId = ++reqId.current;
     setLoading(true);
     try {
       const b = await publicClient.readContract({
@@ -31,19 +33,19 @@ export function useCUSD(): UseCUSDResult {
         functionName: "balanceOf",
         args: [account],
       });
-      if (!cancelRef.current) setBalance(b);
+      if (myId === reqId.current) setBalance(b);
     } catch {
       // ignore
     } finally {
-      if (!cancelRef.current) setLoading(false);
+      if (myId === reqId.current) setLoading(false);
     }
   }, [publicClient, rewardToken, account]);
 
   useEffect(() => {
-    cancelRef.current = false;
     void refetch();
     return () => {
-      cancelRef.current = true;
+      // Invalidate any in-flight read from this run.
+      reqId.current++;
     };
   }, [refetch]);
 

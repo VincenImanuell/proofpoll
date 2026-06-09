@@ -51,8 +51,11 @@ export async function uploadToLighthouse(
   if (!res.ok) {
     throw new Error(`Lighthouse upload failed: ${res.status} ${await res.text().catch(() => "")}`);
   }
-  const json = (await res.json()) as { Hash: string; Size?: string | number };
+  const json = (await res.json()) as { Hash?: unknown; Size?: string | number };
   const cid = json.Hash;
+  if (typeof cid !== "string" || cid.length === 0) {
+    throw new Error(`Lighthouse upload: response missing a valid CID (got ${JSON.stringify(json)})`);
+  }
   return { cid, uri: ipfsUri(cid), size: Number(json.Size ?? bytes.byteLength) };
 }
 

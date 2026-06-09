@@ -114,29 +114,39 @@ export function ProofPollProvider({
   }, [chain]);
 
   const initRef = useRef(false);
+  // Volatile values read inside the run-once effect via a ref, so they don't force re-runs.
+  const initCfgRef = useRef({ rewardTokenProp, feeCurrencyProp, isMiniPay, autoConnect, walletClient, connect });
+  initCfgRef.current = { rewardTokenProp, feeCurrencyProp, isMiniPay, autoConnect, walletClient, connect };
   useEffect(() => {
     if (initRef.current) return;
-    initRef.current = true;
     let cancelled = false;
     void (async () => {
-      if (rewardTokenProp === undefined) {
+      const c = initCfgRef.current;
+      // Resolve the reward token from escrow.payToken (unless overridden). Mark init complete only
+      // on success, so a failed first attempt can retry if `escrow`/`publicClient` change.
+      if (c.rewardTokenProp === undefined) {
         try {
           const token = (await publicClient.readContract({
             address: escrow,
             abi: rewardEscrowAbi,
             functionName: "payToken",
           })) as Address;
-          if (!cancelled && token) {
+          if (cancelled) return;
+          if (token) {
             setRewardToken(token);
-            if (feeCurrencyProp === undefined) setFeeCurrency(token);
+            if (c.feeCurrencyProp === undefined) setFeeCurrency(token);
           }
+          initRef.current = true;
         } catch {
-          // keep the fallback cUSD
+          // keep the fallback cUSD; leave initRef false so a later run can retry
         }
+      } else {
+        initRef.current = true;
       }
-      if (isMiniPay && autoConnect && walletClient) {
+      // Auto-connect inside MiniPay (independent of the read above).
+      if (!cancelled && c.isMiniPay && c.autoConnect && c.walletClient) {
         try {
-          await connect();
+          await c.connect();
         } catch {
           // user can connect manually
         }
@@ -145,7 +155,7 @@ export function ProofPollProvider({
     return () => {
       cancelled = true;
     };
-  }, [escrow, publicClient, walletClient, isMiniPay, autoConnect, connect, rewardTokenProp, feeCurrencyProp]);
+  }, [escrow, publicClient]);
 
   const client = useMemo(
     () => createProofPollClient({ escrow, publicClient, walletClient, account, chain }),

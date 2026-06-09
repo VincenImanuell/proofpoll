@@ -6,6 +6,7 @@ import {
   importKey,
   prepareResponse,
   type ConsentRecord,
+  type EncryptedAnswer,
   type SurveyQuestion,
   type SurveySchema,
 } from "@proofpoll/sdk";
@@ -25,6 +26,9 @@ export interface SurveyWidgetSuccess {
   /// The AES key (base64) the answer was encrypted with — surface it so the respondent can prove
   /// authorship / the organizer can decrypt.
   exportedKey: string;
+  /// The full encrypted answer (ciphertext + IV). When not uploading to IPFS, persist this — it is
+  /// the only copy of the committed answer; the on-chain `responseHash` is just a hash of it.
+  encrypted: EncryptedAnswer;
   explorerUrl?: string;
 }
 
@@ -71,14 +75,15 @@ export function SurveyWidget({
 
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
   const [busy, setBusy] = useState(false);
-  const prepRef = useRef<{ responseHash: Hex; exportedKey: string }>();
+  const prepRef = useRef<{ responseHash: Hex; exportedKey: string; encrypted: EncryptedAnswer }>();
 
   const onSuccessRef = useRef(onSuccess);
   onSuccessRef.current = onSuccess;
-  const notified = useRef(false);
+  // Keyed on the tx hash so a fresh submission re-arms the callback (not a one-shot boolean).
+  const lastNotified = useRef<Hex>();
   useEffect(() => {
-    if (reward.status === "success" && reward.hash && prepRef.current && !notified.current) {
-      notified.current = true;
+    if (reward.status === "success" && reward.hash && prepRef.current && reward.hash !== lastNotified.current) {
+      lastNotified.current = reward.hash;
       onSuccessRef.current?.({
         txHash: reward.hash,
         reward: reward.reward,
@@ -86,6 +91,7 @@ export function SurveyWidget({
         nullifier: reward.nullifier,
         responseHash: prepRef.current.responseHash,
         exportedKey: prepRef.current.exportedKey,
+        encrypted: prepRef.current.encrypted,
         explorerUrl: reward.explorerUrl,
       });
     }
@@ -101,6 +107,13 @@ export function SurveyWidget({
   async function submit(proof: Hex) {
     try {
       setBusy(true);
+      if (upload && !lighthouseApiKey) {
+        // Don't silently pretend to pin: the answer falls back to the no-upload path, where the
+        // only copy of the ciphertext is the `encrypted` field surfaced in onSuccess.
+        console.warn(
+          "[ProofPoll] upload requested but no lighthouseApiKey on the provider — the encrypted answer will NOT be pinned to IPFS. Persist `encrypted` from onSuccess to keep it recoverable.",
+        );
+      }
       const { key, exportedKey } = await resolveKey();
       const consentRecord: ConsentRecord = {
         purpose: "survey-response",
@@ -115,7 +128,7 @@ export function SurveyWidget({
         consent: consentRecord,
         upload: upload && lighthouseApiKey ? { apiKey: lighthouseApiKey } : undefined,
       });
-      prepRef.current = { responseHash: prepared.responseHash, exportedKey };
+      prepRef.current = { responseHash: prepared.responseHash, exportedKey, encrypted: prepared.encrypted };
       await reward.submit({ surveyId, responseHash: prepared.responseHash, proof });
     } catch (e) {
       onError?.(e as Error);
