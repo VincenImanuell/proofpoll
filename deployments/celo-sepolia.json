@@ -1,0 +1,17 @@
+{
+  "network": "celo-sepolia",
+  "chainId": 11142220,
+  "explorer": "https://celo-sepolia.blockscout.com",
+  "deployedAt": null,
+  "deployer": null,
+  "toolchain": "forge",
+  "contracts": {
+    "mockSelfHub": "",
+    "selfHumanVerifier": "",
+    "rewardEscrow": ""
+  },
+  "tokens": {
+    "cUSD": "0xEF4d55D6dE8e8d73232827Cd1e9b2F2dBb45bC80"
+  },
+  "note": "Placeholder. Filled in by DeployTestnet.s.sol (forge script). Until populated, the Mini App reads addresses from Vite env."
+}

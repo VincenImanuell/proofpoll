@@ -64,8 +64,11 @@ proofpoll/
 │   ├── test/           forge tests (incl. Sybil + fuzz + Self integration)
 │   └── script/         Deploy.s.sol (mainnet) · DeployTestnet.s.sol (full Sepolia stack)
 ├── deployments/        on-chain address registry per network
-├── packages/sdk/       @proofpoll/sdk — embeddable React widgets   ⏳ Week 2
-└── apps/miniapp/       MiniPay Mini App demo                       ⏳ Week 3
+├── packages/sdk/       @proofpoll/sdk — framework-agnostic TS SDK over viem
+│                       (client, prepareResponse, crypto, hashing, ABIs)        ✅ Week 2
+├── packages/react/     @proofpoll/react — React hooks + widgets for MiniPay
+│                       (ProofPollProvider, SurveyWidget, VerifiedHumanGate)    ✅ Week 2
+└── apps/miniapp/       MiniPay Mini App demo (Vite + React + Tailwind)         ✅ Week 3
 ```
 
 ## Smart contracts
@@ -132,10 +135,11 @@ against Self's real Hub V2, then `Deploy.s.sol` with `VERIFIER` set to its addre
 - **Week 1 — Foundation (testnet).** ✅ Monorepo, `RewardEscrow` core, full forge test suite (Sybil +
   fuzz), CI.
 - **Week 2 — SDK + Self.** ✅ `SelfHumanVerifier` Self Protocol adapter + integration tests, Celo
-  Sepolia deploy stack. ⏳ `@proofpoll/sdk` React widgets (`<VerifiedHumanGate>`, `<SurveyWidget>`,
-  `useReward()`), encrypted answers → IPFS/Lighthouse, on-chain consent.
-- **Week 3 — Mainnet + demo.** MiniPay Mini App, deploy + verify on Celo mainnet, real respondents,
-  demo video + deck.
+  Sepolia deploy stack, `@proofpoll/sdk` (viem client + `prepareResponse`: encrypt → IPFS/Lighthouse
+  → on-chain commitment), and `@proofpoll/react` widgets (`<VerifiedHumanGate>`, `<SurveyWidget>`,
+  `useReward()`).
+- **Week 3 — Mainnet + demo.** ✅ MiniPay Mini App (`apps/miniapp`). ⏳ deploy + verify on Celo
+  mainnet, real respondents, demo video + deck.
 
 ## Tech stack
 
