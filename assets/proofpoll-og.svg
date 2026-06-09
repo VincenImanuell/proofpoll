@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="ProofPoll social card">
+  <defs>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5BF0A6"/>
+      <stop offset="1" stop-color="#34B3A0"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="32%" cy="45%" r="85%">
+      <stop offset="0" stop-color="#16223B"/>
+      <stop offset="1" stop-color="#0B1020"/>
+    </radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- circuit motif -->
+  <g stroke="#2BE08A" stroke-width="2.5" opacity="0.14" fill="none" stroke-linecap="round">
+    <path d="M0 120 H120 L160 160 H300"/>
+    <path d="M1200 110 H1040 L1000 150"/>
+    <path d="M0 520 H140 L180 480"/>
+    <path d="M1200 540 H980 L940 500 H760"/>
+    <circle cx="300" cy="160" r="5" fill="#2BE08A" stroke="none"/>
+    <circle cx="760" cy="500" r="5" fill="#2BE08A" stroke="none"/>
+  </g>
+
+  <!-- emblem (left), shield + verified human, centered at (290,300) scale ~1.25 -->
+  <g transform="translate(290 300) scale(1.25)" filter="url(#glow)" fill="none" stroke="url(#green)" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M0 -104 L118 -58 V72 C118 138 64 184 0 216 C-64 184 -118 138 -118 72 V-58 Z" stroke-width="11"/>
+    <circle cx="0" cy="0" r="34" stroke-width="11"/>
+    <path d="M-60 104 L-16 148 L76 42" stroke-width="14"/>
+  </g>
+
+  <!-- wordmark + tagline (right) -->
+  <g fill="#FFFFFF" font-family="Segoe UI, system-ui, -apple-system, Roboto, sans-serif">
+    <text x="560" y="270" font-size="92" font-weight="800" letter-spacing="-1">ProofPoll</text>
+    <text x="562" y="338" font-size="38" font-weight="600" fill="#D7E3E0">Verified-human surveys.</text>
+    <text x="562" y="386" font-size="38" font-weight="600" fill="#5BF0A6">Instant cUSD rewards.</text>
+    <text x="562" y="452" font-size="26" font-weight="500" fill="#8FA3B8">Celo · Self · MiniPay — not a game, real data + payments.</text>
+  </g>
+</svg>
