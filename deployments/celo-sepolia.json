@@ -2,16 +2,23 @@
   "network": "celo-sepolia",
   "chainId": 11142220,
   "explorer": "https://celo-sepolia.blockscout.com",
-  "deployedAt": null,
-  "deployer": null,
+  "deployedAt": "2026-06-09",
+  "deployedBlock": 27680729,
+  "deployer": "0xC30307620677a77FB30B52b2CC2dcB7a85d91C16",
   "toolchain": "forge",
+  "sourceVerified": true,
   "contracts": {
-    "mockSelfHub": "",
-    "selfHumanVerifier": "",
-    "rewardEscrow": ""
+    "mockSelfHub": "0x492655FE8343E22fcAE9F52090257Ca17F18562A",
+    "selfHumanVerifier": "0x3B3698f898385fEd25ec4974866237f32Fd4dBe0",
+    "rewardEscrow": "0x73BDfb5408FeB63C7bd31f4E72CF301D30d75797"
   },
   "tokens": {
     "cUSD": "0xEF4d55D6dE8e8d73232827Cd1e9b2F2dBb45bC80"
   },
-  "note": "Placeholder. Filled in by DeployTestnet.s.sol (forge script). Until populated, the Mini App reads addresses from Vite env."
+  "txHashes": {
+    "mockSelfHub": "0xd03f877473565f13e2cf9100dddade1052ca262638bbc80e3a7b81b28ec46fde",
+    "selfHumanVerifier": "0xe1b526a534dc19b292b301a6a0565881acb8e94f11b727e06e765d5e2727ed9a",
+    "rewardEscrow": "0x3a9445829c59e93c77d54b6a635b885f5b72caf9084a673fc22c868ad1d0a016"
+  },
+  "note": "Testnet stack. MockSelfHub stands in for Self's Identity Verification Hub on testnet (mock passports); the SelfHumanVerifier adapter is real. Mainnet wires Self's deployed Hub V2."
 }
